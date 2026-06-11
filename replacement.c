@@ -137,4 +137,4 @@ int main() {
     optimal(pages, n, capacity);
 
     return 0;
-}
+}  

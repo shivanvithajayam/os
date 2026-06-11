@@ -36,29 +36,23 @@
             *currentTime = p[i].ct;
             p[i].done = 1;
         }
-    }
+    } 
     // Function to print Gantt Chart
-    void printGanttChart(struct process p[], int n)
+    void printGanttChart(struct process q[], int count, int startTime)
     {
         printf("\nGantt Chart:\n");
-        printf("-------------------------------------------------\n");
+        printf("-------------------------------------------------\n|");
 
-        // Print process IDs
-        for (int i = 0; i < n; i++)
-        {
-            printf("|  P%d  ", p[i].id);
-        }
-        printf("|\n");
+        for(int i = 0; i < count; i++)
+            printf("  P%d  |", q[i].id);
 
-        printf("-------------------------------------------------\n");
+        printf("\n-------------------------------------------------\n");
 
-        // Print timeline
-        int time = 0;
-        printf("%d", p[0].at < 0 ? 0 : p[0].at); // start time
-        for (int i = 0; i < n; i++)
-        {
-            printf("     %d", p[i].ct);
-        }
+        printf("%d", startTime);
+
+        for(int i = 0; i < count; i++)
+            printf("     %d", q[i].ct);
+
         printf("\n");
     }
     int main() {
@@ -112,8 +106,8 @@
         }
         printf("\nAverage Waiting Time: %.2f", totalWT / n);
         printf("\nAverage Turnaround Time: %.2f\n", totalTAT / n);
-        printGanttChart(systemQueue, sysCount);
-        printGanttChart(userQueue, userCount);
+        printGanttChart(systemQueue, sysCount, 0);
+        printGanttChart(userQueue, userCount, systemQueue[sysCount-1].ct);
 
         return 0;
         }

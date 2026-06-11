@@ -23,6 +23,11 @@ void srtf(struct process p[], int n) {
                     min_rt = p[i].rt;
                     idx = i;
                 }
+                 else if (p[i].rt == min_rt)
+                {
+                    if (p[i].at < p[idx].at)
+                        idx = i;
+                }
             }
         }
         if (idx != -1) {
@@ -31,25 +36,28 @@ void srtf(struct process p[], int n) {
 
 
             if (p[idx].rt == 0) {
-                completed++;
+                
                 p[idx].ct = t;
                 p[idx].tat = p[idx].ct - p[idx].at;
                 p[idx].wt = p[idx].tat - p[idx].bt;
                 total_wt += p[idx].wt;
                 total_tat += p[idx].tat;
+                completed++;
             }
-        } else {
-
+        } 
+        else {
+ 
             t++;
         }
     }
     printf("\nID\tAT\tBT\tCT\tWT\tTAT\n");
     for (int i = 0; i < n; i++) {
-        printf("%d\t%d\t%d\t%d\t%d\t%d\n", i, p[i].at, p[i].bt, p[i].ct, p[i].wt, p[i].tat);
+        printf("%d\t%d\t%d\t%d\t%d\t%d\n", i+1, p[i].at, p[i].bt, p[i].ct, p[i].wt, p[i].tat);
     }
     printf("\nAverage Waiting Time: %.2f\n", total_wt / n);
     printf("Average Turnaround Time: %.2f\n", total_tat / n);
 }
+
 int main() {
     int n;
     struct process p[MAX];

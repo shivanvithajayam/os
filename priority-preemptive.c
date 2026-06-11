@@ -13,9 +13,7 @@ struct process {
 void priorityPreemptive(struct process p[], int n) {
     int completed = 0, t = 0;
     float total_wt = 0, total_tat = 0;
-    for (int i = 0; i < n; i++) {
-        p[i].rt = p[i].bt;
-    }
+    
     while (completed < n) {
         int idx = -1;
         int highest_priority = 9999;
@@ -32,10 +30,12 @@ void priorityPreemptive(struct process p[], int n) {
                 }
             }
         }
-        if (idx != -1)
+        if (idx != -1) {
             p[idx].rt--;
+            t++;
+
             if (p[idx].rt == 0) {
-                p[idx].ct = t + 1;
+                p[idx].ct = t ;
                 p[idx].tat = p[idx].ct - p[idx].at;
                 p[idx].wt = p[idx].tat - p[idx].bt;
 
@@ -44,7 +44,11 @@ void priorityPreemptive(struct process p[], int n) {
                 completed++;
             }
         }
-        t++;
+        else{
+            t++;
+        }
+        
+        
     }
     printf("\nID\tAT\tBT\tPR\tCT\tWT\tTAT\n");
     for (int i = 0; i < n; i++) {
@@ -73,6 +77,7 @@ int main() {
 
         printf("Enter priority for process %d (lower number = higher priority): ", i);
         scanf("%d", &p[i].pr);
+        p[i].rt = p[i].bt;
     }
 
     priorityPreemptive(p, n);

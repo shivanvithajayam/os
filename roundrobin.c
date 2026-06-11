@@ -15,17 +15,17 @@ void RoundRobin(struct process p[], int n, int tq) {
     int t = 0, completed = 0;
     int queue[max], front = 0, rear = 0, visited[max] = {0};
 
-
-    for (int i = 0; i < n; i++) {
-        p[i].rt = p[i].bt;
-    }
-
     queue[rear++] = 0;
     visited[0] = 1;
+    int gantt[max],gt[max],g=0;
 
 
     while (completed < n) {
+       
         int idx = queue[front++];
+        gantt[g] = idx;
+        gt[g] = t;
+        g++;
 
         if (p[idx].rt > 0) {
             if (p[idx].rt > tq) {
@@ -41,7 +41,7 @@ void RoundRobin(struct process p[], int n, int tq) {
             }
 
 
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < n; i++) { //Add newly arrived processes
                 if (i != idx && !visited[i] && p[i].at <= t) {
                     queue[rear++] = i;
                     visited[i] = 1;
@@ -49,12 +49,12 @@ void RoundRobin(struct process p[], int n, int tq) {
             }
 
 
-            if (p[idx].rt > 0) {
+            if (p[idx].rt > 0) { //Reinsert unfinished process
                 queue[rear++] = idx;
             }
         }
 
-        if (front == rear && completed < n) {
+        if (front == rear && completed < n) { //Handle CPU Idle
             for (int i = 0; i < n; i++) {
                 if (!visited[i]) {
                     queue[rear++] = i;
@@ -65,6 +65,7 @@ void RoundRobin(struct process p[], int n, int tq) {
             }
         }
     }
+    gt[g] = t;
 
     printf("\nID\tAT\tBT\tCT\tWT\tTAT\n");
     float total_wt = 0, total_tat = 0;
@@ -75,6 +76,17 @@ void RoundRobin(struct process p[], int n, int tq) {
         total_wt += p[i].wt;
         total_tat += p[i].tat;
     }
+    printf("\n------------------GANTT CHART----------------------\n");
+
+    for(int i=0;i<g;i++){
+        printf("| P%d ", gantt[i]);
+    }
+    printf("|\n");
+
+    for(int i=0;i<=g;i++){
+        printf("%d    ", gt[i]);
+    }
+    printf("\n");
 
     printf("\nAverage Waiting Time: %.2f\n", total_wt / n);
     printf("Average Turnaround Time: %.2f\n", total_tat / n);
@@ -93,6 +105,7 @@ int main() {
 
         printf("Enter burst time for process %d: ", i);
         scanf("%d", &p[i].bt);
+        p[i].rt = p[i].bt;
     }
 
     printf("Enter time quantum: ");

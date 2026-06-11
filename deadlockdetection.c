@@ -7,7 +7,8 @@ int main()
     int n, m; // n = processes, m = resources
     int allocation[MAX][MAX], request[MAX][MAX], available[MAX];
     bool finish[MAX] = {false};
-    int safesequence[MAX]; // store safe sequence
+    int safesequence[MAX];
+    int work[MAX]; // store safe sequence
 
     printf("Enter number of processes: ");
     scanf("%d", &n);
@@ -27,6 +28,8 @@ int main()
     printf("Enter Available Resources:\n");
     for (int i = 0; i < m; i++)
         scanf("%d", &available[i]);
+    for (int i = 0; i < m; i++)
+        work[i] = available[i];
 
     int count = 0;
     while (count < n)
@@ -40,7 +43,7 @@ int main()
                 bool canFinish = true;
                 for (int j = 0; j < m; j++)
                 {
-                    if (request[i][j] > available[j])
+                    if (request[i][j] > work[j])
                     {
                         canFinish = false;
                         break;
@@ -49,12 +52,12 @@ int main()
                 if (canFinish)
                 {
                     for (int j = 0; j < m; j++)
-                        available[j] += allocation[i][j];
+                        work[j] += allocation[i][j];
 
-                    safesequence[count] = i; // record process in safe sequence
+                    safesequence[count++] = i; // record process in safe sequence
                     finish[i] = true;
                     found = true;
-                    count++;
+                    
                 }
             }
         }
